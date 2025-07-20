@@ -1,6 +1,6 @@
 # OpenAuditLabs Dataset
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Version](https://img.shields.io/badge/version-1.0.0-green)](https://github.com/OpenAuditLabs/dataset)
 
 ## Overview
@@ -53,7 +53,7 @@ Clone the repository or download specific categories as needed.
 
 ## License
 
-This dataset is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE) for details.
+This dataset is licensed under the GNU Affero General Public License v3.0. See [LICENSE](LICENSE) for details.
 
 ## Contributing
 
