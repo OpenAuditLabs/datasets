@@ -19,7 +19,42 @@ Without such a benchmark, evaluating and training agentic systems becomes incons
 
 ---
 
-## 3. Problem Statement
+## 3. Literature Review
+
+### SC-Bench: A Large-Scale Dataset for Smart Contract Auditing
+
+**Authors**: Shihao Xia, Mengting He, Linhai Song, Yiying Zhang  
+**Year**: 2024  
+**Link**: [https://arxiv.org/abs/2410.06176](https://arxiv.org/abs/2410.06176)
+
+SC-Bench provides a large-scale dataset of 5,377 real-world Ethereum contracts annotated with 15,975 violations based on ERC standards. It includes 139 manually identified real violations and over 15,000 synthetically injected ones using six distinct Abstract Syntax Tree (AST) mutation strategies, such as omission of condition checks, faulty return values, and state update bypassing.
+
+To assess its usefulness, the authors tested GPT-4 in two configurations:
+- **Zero-shot prompting with full ERC rules**: GPT-4 detected only 0.6% of synthetic and ~29% of real violations.
+- **Oracle-assisted prompting (given specific rule + location)**: Detection improved to 22.8% for injected and 42.8% for real vulnerabilities.
+
+These results underscore the challenge of LLM-based detection and the need for well-structured datasets. SC-Bench is publicly available with rule injection scripts and evaluation pipelines and serves as a strong foundation for model benchmarking in compliance-oriented auditing.
+
+---
+
+### AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes
+
+**Authors**: Majd Soud, Ilham Qasse, Grischa Liebel, Mohammad Hamdaqa  
+**Year**: 2022  
+**Link**: [https://arxiv.org/abs/2212.10660](https://arxiv.org/abs/2212.10660)
+
+AutoMESC is a comprehensive framework for mining, labeling, and validating smart contract vulnerability-fix pairs. It identifies vulnerability-related commits from GitHub and CVE databases, then uses seven static analyzers (e.g., Slither, Mythril, SmartCheck) to classify up to 36 vulnerability types.
+
+Key contributions:
+- Uses a **majority voting scheme** among tools to ensure label quality (at least 50% agreement).
+- Automatically links commits to fixes using keyword patterns, and re-validates patched code by rerunning the same detection tools.
+- Compiles over 6,700 vulnerability–fix pairs with associated severity metadata and patch explanations.
+
+AutoMESC is highly relevant to patch generation and severity ranking tasks. It offers one of the few public datasets that link vulnerable and fixed versions of smart contracts, making it valuable for training and evaluating LLMs and RL agents on repair tasks.
+
+---
+
+## 4. Problem Statement
 
 There is no widely accepted dataset that supports the full cycle of tasks needed by agentic AI frameworks: vulnerability detection, scoring, patch generation, and patch validation. Existing datasets either focus on isolated bug instances (e.g., SWC Registry) or synthetic contracts with limited real-world relevance. This proposal aims to build a dataset that meets the following needs:
 
@@ -29,7 +64,7 @@ There is no widely accepted dataset that supports the full cycle of tasks needed
 
 ---
 
-## 4. Objectives
+## 5. Objectives
 
 - **O1**: Primarily, we aim to identify and evaluate existing smart contract datasets that align with the Smart Contract Weakness Classification (SWC) registry. These include datasets containing real-world or synthetic smart contracts labeled with specific vulnerability types defined by the SWC taxonomy.
 
@@ -49,7 +84,7 @@ There is no widely accepted dataset that supports the full cycle of tasks needed
 
 ---
 
-## 5. Methodology
+## 6. Methodology
 
 ### 5.1 Data Sources
 
@@ -88,7 +123,7 @@ Each sample will include:
 
 ---
 
-## 6. Expected Outcomes
+## 7. Expected Outcomes
 
 - A public benchmark dataset named **OpenAuditBenchmark**  
 - Evaluation leaderboards for LLMs, GNNs, and RL agents  
@@ -97,7 +132,7 @@ Each sample will include:
 
 ---
 
-## 7. Team & Collaboration
+## 8. Team & Collaboration
 
 We will invite collaboration from:
 
@@ -108,7 +143,7 @@ We will invite collaboration from:
 
 ---
 
-## 8. Impact
+## 9. Impact
 
 This dataset will catalyze research at the intersection of smart contract security and agentic AI. By offering a high-quality benchmark with diverse annotations, it can help establish agentic auditing as a scalable solution in security workflows, while enabling reproducibility, comparability, and openness across future research.
 
