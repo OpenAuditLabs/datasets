@@ -1,5 +1,13 @@
 # OpenAuditBenchmark: A Dataset for Agentic AI in Smart Contract Vulnerability Detection, Prioritization, and Patch Suggestion
 
+## Abstract
+
+The evolving landscape of decentralized applications (dApps) has amplified the critical need for secure and verifiable smart contracts. While advances in static analyzers and large language models (LLMs) show promise, a core challenge remains: the absence of a comprehensive, standardized dataset that supports the full agentic AI lifecycle—vulnerability detection, severity scoring, patch generation, and patch validation. Existing datasets such as SC-Bench and AutoMESC provide valuable yet fragmented resources, often differing in format, scope, or focus (e.g., synthetic bugs vs. real-world exploits, detection-only vs. fix-pair annotations).
+
+This proposal introduces **OpenAuditBenchmark**, a unified and extensible dataset designed to consolidate and standardize heterogeneous data sources—including SC-Bench, AutoMESC, SWC Registry, and curated real-world exploit examples—into a cohesive schema. The benchmark will feature multi-modal annotations (code, vulnerability tags, severity scores, exploit traces, and fix patches), enabling zero-shot, few-shot, and reinforcement learning paradigms. Our goal is to foster reproducibility, rigorous evaluation, and collaboration across the smart contract security and AI research communities. By harmonizing disparate resources under a common benchmark, **OpenAuditBenchmark** will serve as the foundation for agentic AI systems capable of automated auditing and secure code remediation in the Web3 ecosystem.
+
+---
+
 ## 1. Title
 
 **OpenAuditBenchmark: A Dataset for Agentic AI in Smart Contract Vulnerability Detection, Prioritization, and Patch Suggestion**
