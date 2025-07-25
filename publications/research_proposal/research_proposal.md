@@ -43,8 +43,6 @@ To assess its usefulness, the authors tested GPT-4 in two configurations:
 
 These results underscore the challenge of LLM-based detection and the need for well-structured datasets. SC-Bench is publicly available with rule injection scripts and evaluation pipelines and serves as a strong foundation for model benchmarking in compliance-oriented auditing.
 
----
-
 ### AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes
 
 **Authors**: Majd Soud, Ilham Qasse, Grischa Liebel, Mohammad Hamdaqa  
@@ -59,6 +57,22 @@ Key contributions:
 - Compiles over 6,700 vulnerability–fix pairs with associated severity metadata and patch explanations.
 
 AutoMESC is highly relevant to patch generation and severity ranking tasks. It offers one of the few public datasets that link vulnerable and fixed versions of smart contracts, making it valuable for training and evaluating LLMs and RL agents on repair tasks.
+
+### 3.1 Comparative Analysis: SC-Bench vs. AutoMESC
+
+| Feature                     | **SC-Bench**                                           | **AutoMESC**                                               |
+|----------------------------|--------------------------------------------------------|------------------------------------------------------------|
+| Source Type                | Primarily synthetic (AST mutation) + 139 real examples | Real-world data (GitHub, CVEs)                             |
+| Volume                     | 5,377 contracts / 15,975 issues                        | ~6,700 vulnerability–fix pairs                             |
+| Annotation Style           | Rule-based (88 ERC rules), location tagged             | SWC tags, severity scores, commit diffs                    |
+| Patch Availability         | ❌ No patches                                           | ✅ Fixes included                                          |
+| Severity Labeling          | ✅ For 139 real cases                                  | ✅ CVSS-style severity across samples                      |
+| Tool Agreement Metadata    | ❌                                                    | ✅ Labeled using majority voting among 7 static analyzers  |
+| Exploit Trace Support      | ❌                                                    | Partial (in commit or vulnerability history)              |
+| Strengths                  | Clean, rule-aligned injection ideal for detection      | Rich, real-world repair data ideal for patching/validation|
+| Limitations                | Unrealistic patterns, no fix labels                    | No synthetic data to expand uncommon vulnerabilities       |
+
+This analysis highlights how **SC-Bench** provides a clean, rule-driven evaluation base for detection models, while **AutoMESC** focuses on patch realism, severity scoring, and real-world context. Their integration within **OpenAuditBenchmark** ensures full-spectrum coverage—detection, ranking, and repair—enabling robust agentic AI development and evaluation.
 
 ---
 
@@ -94,14 +108,14 @@ There is no widely accepted dataset that supports the full cycle of tasks needed
 
 ## 6. Methodology
 
-### 5.1 Data Sources
+### 6.1 Data Sources
 
 - SWC Registry (Smart Contract Weakness Classification)  
 - Real exploits from platforms like **Etherscan**, **Ethernaut**, and **Damn Vulnerable DeFi**  
 - GitHub repositories containing audit reports and remediation histories  
 - Curated StackOverflow code snippets and bug bounty disclosures  
 
-### 5.2 Annotation Schema
+### 6.2 Annotation Schema
 
 Each sample will include:
 
@@ -113,14 +127,14 @@ Each sample will include:
 - `fix_patch`: Human-written or LLM-generated patch  
 - `validation_status`: Pass/fail status based on sandbox validation  
 
-### 5.3 Toolchain
+### 6.3 Toolchain
 
 - **Static analysis**: Slither, Mythril, Semgrep  
 - **Dynamic analysis**: Echidna, Manticore  
 - **LLM augmentation**: GPT-4, LLaMA-3, Claude  
 - **Manual review**: Validation by security auditors  
 
-### 5.4 Benchmark Tasks
+### 6.4 Benchmark Tasks
 
 | Task                      | Input            | Output         | Metric                  |
 |---------------------------|------------------|----------------|--------------------------|
