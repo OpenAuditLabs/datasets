@@ -29,8 +29,7 @@ Without such a benchmark, evaluating and training agentic systems becomes incons
 
 ## 3. Literature Review
 
-### SC-Bench: A Large-Scale Dataset for Smart Contract Auditing
-
+### SC-Bench: A Large-Scale Dataset for Smart Contract Auditing  
 **Authors**: Shihao Xia, Mengting He, Linhai Song, Yiying Zhang  
 **Year**: 2024  
 **Link**: [https://arxiv.org/abs/2410.06176](https://arxiv.org/abs/2410.06176)
@@ -43,8 +42,9 @@ To assess its usefulness, the authors tested GPT-4 in two configurations:
 
 These results underscore the challenge of LLM-based detection and the need for well-structured datasets. SC-Bench is publicly available with rule injection scripts and evaluation pipelines and serves as a strong foundation for model benchmarking in compliance-oriented auditing.
 
-### AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes
+---
 
+### AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes  
 **Authors**: Majd Soud, Ilham Qasse, Grischa Liebel, Mohammad Hamdaqa  
 **Year**: 2022  
 **Link**: [https://arxiv.org/abs/2212.10660](https://arxiv.org/abs/2212.10660)
@@ -58,21 +58,38 @@ Key contributions:
 
 AutoMESC is highly relevant to patch generation and severity ranking tasks. It offers one of the few public datasets that link vulnerable and fixed versions of smart contracts, making it valuable for training and evaluating LLMs and RL agents on repair tasks.
 
-### 3.1 Comparative Analysis: SC-Bench vs. AutoMESC
+---
 
-| Feature                     | **SC-Bench**                                           | **AutoMESC**                                               |
-|----------------------------|--------------------------------------------------------|------------------------------------------------------------|
-| Source Type                | Primarily synthetic (AST mutation) + 139 real examples | Real-world data (GitHub, CVEs)                             |
-| Volume                     | 5,377 contracts / 15,975 issues                        | ~6,700 vulnerability–fix pairs                             |
-| Annotation Style           | Rule-based (88 ERC rules), location tagged             | SWC tags, severity scores, commit diffs                    |
-| Patch Availability         | ❌ No patches                                           | ✅ Fixes included                                          |
-| Severity Labeling          | ✅ For 139 real cases                                  | ✅ CVSS-style severity across samples                      |
-| Tool Agreement Metadata    | ❌                                                    | ✅ Labeled using majority voting among 7 static analyzers  |
-| Exploit Trace Support      | ❌                                                    | Partial (in commit or vulnerability history)              |
-| Strengths                  | Clean, rule-aligned injection ideal for detection      | Rich, real-world repair data ideal for patching/validation|
-| Limitations                | Unrealistic patterns, no fix labels                    | No synthetic data to expand uncommon vulnerabilities       |
+### SWC Registry: Smart Contract Weakness Classification Registry  
+**Maintained by**: ConsenSys Diligence  
+**Link**: [https://swcregistry.io](https://swcregistry.io)
 
-This analysis highlights how **SC-Bench** provides a clean, rule-driven evaluation base for detection models, while **AutoMESC** focuses on patch realism, severity scoring, and real-world context. Their integration within **OpenAuditBenchmark** ensures full-spectrum coverage—detection, ranking, and repair—enabling robust agentic AI development and evaluation.
+The SWC Registry is an industry-maintained taxonomy of vulnerabilities affecting Ethereum smart contracts. It categorizes over 40 known weaknesses (SWC-100 to SWC-140+) with standardized IDs, descriptions, and curated code examples. While not a dataset per se, the SWC Registry is widely used as a **canonical reference for vulnerability labeling** in audits, tooling, and research.
+
+Key characteristics:
+- Textual descriptions and example snippets for each weakness  
+- Frequently used in conjunction with other datasets (e.g., AutoMESC, Slither output)  
+- Serves as a classification backbone for vulnerability detection tools and LLM training  
+
+It is essential for any benchmark that aims to be interoperable across tools, researchers, and standards.
+
+---
+
+### 3.1 Comparative Analysis: SC-Bench vs. AutoMESC vs. SWC Registry
+
+| Feature                     | **SC-Bench**                                                                                                     | **AutoMESC**                                                                                                         | **SWC Registry**                                                                                                         |
+|----------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| **Source Type**            | Synthetic mutations + 139 real examples from Ethereum contracts                                                  | Real-world GitHub/CVE vulnerability–fix commits                                                                      | Manually curated examples from real-world contracts and academic/industry reports                                        |
+| **Volume**                 | 5,377 contracts / 15,975 issues                                                                                   | ~6,700 vulnerability–fix pairs                                                                                       | 160+ categorized vulnerabilities across 40+ SWC IDs                                                                      |
+| **Annotation Style**       | ERC rule-based injection (AST mutations), location-tagged                                                        | SWC tags, severity scores, fix diffs, majority voting among 7 static analyzers                                       | Category-level vulnerability explanations with some code examples                                                        |
+| **Patch Availability**     | ❌ Not available                                                                                                  | ✅ Fixes included (commit-based)                                                                                      | ❌ No patches included                                                                                                    |
+| **Severity Labeling**      | ✅ For 139 real-world examples                                                                                    | ✅ Included via CVSS-style annotations and metadata                                                                   | ⚠️ Descriptive only; no standardized severity labels                                                                     |
+| **Tool Agreement Metadata**| ❌                                                                                                                | ✅ 7-analyzer majority voting ensures label reliability                                                               | ❌                                                                                                                        |
+| **Exploit Trace Support**  | ❌                                                                                                                | ⚠️ Partial (from commit history or external links)                                                                   | ❌                                                                                                                        |
+| **Taxonomy Used**          | 88 ERC rules (standards-driven)                                                                                  | SWC + CVE references                                                                                                  | ✅ SWC official categories                                                                                                |
+| **Strengths**              | Highly standardized rule violations, great for training detection models                                         | Real-world patch examples with tool agreement, useful for fine-tuning patch generation models                         | Canonical reference of vulnerability types with detailed descriptions                                                    |
+| **Limitations**            | Unrealistic vulnerability patterns, no patch or exploit info                                                     | Lacks synthetic examples to balance rare bugs; limited control over data generation                                   | Not a dataset — lacks annotations, fix pairs, dynamic info, or executable test cases                                     |
+| **Best Suited For**        | Detection tasks, benchmarking prompt-based models                                                                | Patch generation, severity ranking, repair validation                                                                 | Vulnerability taxonomy reference, LLM fine-tuning on vulnerability *descriptions*                                        |
 
 ---
 
