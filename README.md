@@ -79,3 +79,6 @@ If you use this dataset in your research, please cite:
 - Issues: [GitHub Issues](https://github.com/OpenAuditLabs/dataset/issues)
 
 ---
+<div align="center">
+  <strong>OpenAuditLabs</strong> - Securing the Future of Smart Contracts with AI
+</div>
