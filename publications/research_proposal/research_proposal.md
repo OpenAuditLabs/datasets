@@ -128,6 +128,26 @@ This dataset is highly relevant for patch generation and validation tasks, espec
 
 ---
 
+### 3.2 Feature Unification Strategy for OpenAuditBenchmark
+
+To construct a robust and versatile benchmark, OpenAuditBenchmark should unify key features from the reviewed datasets. Based on comparative analysis, we recommend including the following components:
+
+| Unified Feature              | Justification                                                                                                       |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------|
+| **Real-world + Synthetic Samples** | Combining synthetic samples (SC-Bench) with real-world exploits (AutoMESC, SmartBugs) ensures coverage and edge-case modeling. |
+| **SWC-based Annotations**   | SWC is widely adopted and compatible with static/dynamic tools and audit firms. It enables standardized classification. |
+| **CVSS-style Severity Scores** | Enables prioritization and aligns with industry severity evaluation; present in AutoMESC and implied in SolidiFI-A.        |
+| **Vulnerability–Fix Pairs** | Essential for training patch generation models; AutoMESC and SolidiFI-A offer high-quality paired data.             |
+| **Exploit Traces/Test Suites** | Provides real-world executability and verification. SolidiFI-A and partially AutoMESC support this. Needed for RL validation. |
+| **Patch Type (Human/LLM)**  | Including both human-authored and LLM-generated patches allows for benchmarking hybrid systems.                     |
+| **Tool Agreement Metadata** | Borrowed from AutoMESC’s majority voting—improves annotation reliability and supports confidence scoring.             |
+| **Taxonomy Metadata (SWC/CVE/ERC)** | Combining different taxonomies enhances generalization and cross-referencing across tools.                        |
+| **Zero/Few-shot Compatibility** | Multi-modal samples (code + annotation + patch) support emerging LLM-based agentic workflows.                        |
+
+These features ensure that OpenAuditBenchmark supports comprehensive agentic AI workflows: from detection and scoring to patching and post-repair validation. Our unified schema allows for maximum interoperability with current tools, robust model evaluation, and flexible training regimes (supervised, unsupervised, reinforcement learning).
+
+---
+
 ## 4. Problem Statement
 
 There is no widely accepted dataset that supports the full cycle of tasks needed by agentic AI frameworks: vulnerability detection, scoring, patch generation, and patch validation. Existing datasets either focus on isolated bug instances (e.g., SWC Registry) or synthetic contracts with limited real-world relevance. This proposal aims to build a dataset that meets the following needs:
@@ -220,5 +240,3 @@ We will invite collaboration from:
 ## 9. Impact
 
 This dataset will catalyze research at the intersection of smart contract security and agentic AI. By offering a high-quality benchmark with diverse annotations, it can help establish agentic auditing as a scalable solution in security workflows, while enabling reproducibility, comparability, and openness across future research.
-
----
