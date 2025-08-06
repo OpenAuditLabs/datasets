@@ -108,6 +108,24 @@ Key characteristics:
 
 This dataset is highly relevant for patch generation and validation tasks, especially in reinforcement learning and LLM-based repair workflows.
 
+### SolidiFI-BugLab: A Dataset and Learning Environment for Smart Contract Bug Localization and Repair  
+**Authors**: Mehdi Mirzaei, Andrea Stocco, Valerio Cosentino, Massimiliano Di Penta  
+**Year**: 2023  
+**Link**: [https://arxiv.org/abs/2304.06160](https://arxiv.org/abs/2304.06160)
+
+**SolidiFI-BugLab** is a comprehensive dataset and learning environment aimed at fine-grained bug localization and repair in Solidity smart contracts. It builds upon the SolidiFI framework by incorporating granular bug annotations and line-level fault localization. Each buggy contract is paired with one or more patches and localization masks identifying the fault lines, which makes it highly suitable for deep learning models that require token-level or line-level supervision.
+
+**Key contributions**:
+- Over **8,000 smart contract samples** with labeled bugs and associated fixes.  
+- **Fine-grained fault localization** using line-level binary masks.  
+- Designed to evaluate **end-to-end automated program repair (APR)** pipelines.  
+- Compatible with RL-based repair frameworks and allows integration with dynamic analysis tools.  
+- Demonstrates how **transformer-based models** outperform traditional repair strategies when fine-tuned on this dataset.
+
+**Relevance to OpenAuditBenchmark**:  
+SolidiFI-BugLab enhances the patch generation and repair validation aspects of the benchmark. Its structured fault localization metadata and multi-patch support align well with your goal of building a benchmark that supports **agentic AI workflows**, including **reinforcement learning**, **zero-shot repair**, and **patch quality validation**.
+
+
 ---
 
 ### 3.1 Comparative Analysis: SC-Bench vs. AutoMESC vs. SWC Registry vs. SmartBugs vs. SolidiFI-A vs. VulnContractSet
@@ -283,3 +301,4 @@ Deng, Y., Li, J., Wang, X., & Liu, Z. (2023). **VulnContractSet: A Real-World Da
 [https://arxiv.org/abs/2310.04521](https://arxiv.org/abs/2310.04521)
 
 7. Zhao, Q., Liu, Y., Wang, Z., & Ren, K. (2024). **SmartInspect: Scalable and Explainable Vulnerability Detection in Smart Contracts using Graph Neural Networks**. arXiv preprint [arXiv:2404.09821](https://arxiv.org/abs/2404.09821).
+8. Mirzaei, M., Stocco, A., Cosentino, V., & Di Penta, M. (2023). **SolidiFI-BugLab: A Dataset and Learning Environment for Smart Contract Bug Localization and Repair**. *arXiv preprint arXiv:2304.06160*. [https://arxiv.org/abs/2304.06160](https://arxiv.org/abs/2304.06160)
