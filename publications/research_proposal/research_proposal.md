@@ -190,6 +190,76 @@ This work is important for OpenAuditBenchmark as it demonstrates how transformer
 
 ...
 
+### 3.3 Dataset Integration Blueprint: Towards a Unified OpenAuditBenchmark Schema
+
+While the comparative analysis (Section 3.1) and feature unification strategy (Section 3.2) highlight the heterogeneity and complementary strengths of existing datasets, integrating them into a **cohesive and queryable schema** requires careful harmonization of annotations, data formats, and metadata granularity. To facilitate this, we propose a modular **schema blueprint** for the OpenAuditBenchmark dataset, inspired by principles of [data-centric AI](https://arxiv.org/abs/2203.06057) and successful precedents in software vulnerability research.
+
+#### Unified Schema Design
+
+Each smart contract sample in OpenAuditBenchmark will follow a modular structure, enabling backward compatibility with existing datasets and future extensibility:
+
+```json
+{
+  "contract_id": "OAB-XXXX",
+  "source": {
+    "source_code": "...",
+    "source_type": "synthetic | real-world",
+    "origin": "SC-Bench | AutoMESC | VulnContractSet | custom"
+  },
+  "vulnerability": {
+    "swc_id": "SWC-101",
+    "description": "...",
+    "tool_labels": {
+      "slither": true,
+      "mythril": false,
+      "smartcheck": true
+    },
+    "severity_score": {
+      "cvss_v3": 7.8,
+      "confidence": 0.9
+    },
+    "location": {
+      "lines": [12, 17],
+      "ast_nodes": ["FunctionCall", "Assignment"]
+    }
+  },
+  "exploit_trace": {
+    "available": true,
+    "trace_steps": ["call(A)", "delegatecall(B)"],
+    "tool": "Manticore"
+  },
+  "patch": {
+    "available": true,
+    "type": "human | LLM",
+    "diff": "...",
+    "validation_status": "pass | fail",
+    "test_coverage": 85.5
+  },
+  "taxonomy_links": {
+    "cve": "CVE-2021-XXXX",
+    "erc_standard": "ERC-20"
+  }
+}
+```
+
+This design ensures:
+
+- **Traceability**: We can link each vulnerability to its original dataset and exploit context.
+- **Granularity**: Multi-level annotations (line, AST node, CVSS, tool votes) support downstream explainability and research.
+- **Validation**: Support for RL and APR pipelines through test suite and trace metadata.
+
+---
+
+### Why This Matters
+
+Creating such a unified schema is not just about blending datasets—it's about enabling **interoperability** across research efforts and supporting **data-centric agentic AI development**. By defining a clear, extensible format, **OpenAuditBenchmark** can serve as a plug-and-play backbone for future research in:
+
+- Cross-dataset benchmarking  
+- Multi-task learning  
+- Dataset augmentation using LLMs  
+- Transfer learning across smart contract domains (e.g., NFTs, DeFi, DAO governance)
+
+
 ## 4. Problem Statement
 
 There is no widely accepted dataset that supports the full cycle of tasks needed by agentic AI frameworks: vulnerability detection, scoring, patch generation, and patch validation. Existing datasets either focus on isolated bug instances (e.g., SWC Registry) or synthetic contracts with limited real-world relevance. This proposal aims to build a dataset that meets the following needs:
