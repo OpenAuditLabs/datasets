@@ -180,15 +180,6 @@ Key contributions:
 
 This work is important for OpenAuditBenchmark as it demonstrates how transformer-based models, when trained with comprehensive and well-annotated data, can yield high performance—underlining the value of high-quality datasets like the one proposed.                                           |
 
----
-
-## 3.1 Comparative Analysis: SC-Bench vs. AutoMESC vs. SWC Registry vs. SmartBugs vs. SolidiFI-A
-
-...
-
-## 3.2 Feature Unification Strategy for OpenAuditBenchmark
-
-...
 
 ### 3.3 Dataset Integration Blueprint: Towards a Unified OpenAuditBenchmark Schema
 
@@ -289,6 +280,15 @@ There is no widely accepted dataset that supports the full cycle of tasks needed
 
 - **O6**: Release the dataset as **OpenAuditBenchmark**, alongside evaluation scripts, baseline models, and documentation to foster reproducible research and open collaboration in agentic AI for smart contract security.
 
+
+## 5.1 Reinforcement Learning-Based Vulnerability Dataset Generation
+
+Recent advances in **reinforcement learning (RL)** have shown potential to significantly enhance smart contract security, especially in the generation of specialized datasets. Unlike static, manually curated datasets, which often become outdated or fail to capture novel attack vectors, RL-driven dataset generation enables the continuous creation of **realistic and evolving vulnerability samples**. In this paradigm, an RL agent interacts with a simulated blockchain environment, iteratively probing smart contracts for exploitable weaknesses and recording the outcomes.  
+
+This approach can yield datasets that include a wide range of vulnerabilities — from common patterns such as integer overflows and unchecked external calls to complex **zero-day attack behaviors**. RL-based fuzzing, for example, can autonomously mutate contract states and transaction sequences, revealing hidden flaws that traditional testing overlooks. These generated datasets are inherently adaptive, reflecting the latest attack strategies and enabling **real-time benchmarking** of vulnerability detection models.  
+
+When applied to threats like **reentrancy attacks in Ethereum Layer 2 (L2) environments**, RL-generated datasets provide a richer training ground by combining actual historical exploit data with synthetic yet realistic attack traces. This results in vulnerability detectors that are not only more accurate but also **resilient against emerging threats**. Moreover, the continuous feedback loop between RL-based dataset generation and model training ensures that detection systems remain robust, scalable, and responsive in the ever-changing decentralized application landscape. This can be one possible approach we can take.
+
 ---
 
 ## 6. Methodology
@@ -372,3 +372,6 @@ Deng, Y., Li, J., Wang, X., & Liu, Z. (2023). **VulnContractSet: A Real-World Da
 
 7. Zhao, Q., Liu, Y., Wang, Z., & Ren, K. (2024). **SmartInspect: Scalable and Explainable Vulnerability Detection in Smart Contracts using Graph Neural Networks**. arXiv preprint [arXiv:2404.09821](https://arxiv.org/abs/2404.09821).
 8. Mirzaei, M., Stocco, A., Cosentino, V., & Di Penta, M. (2023). **SolidiFI-BugLab: A Dataset and Learning Environment for Smart Contract Bug Localization and Repair**. *arXiv preprint arXiv:2304.06160*. [https://arxiv.org/abs/2304.06160](https://arxiv.org/abs/2304.06160)
+9. Shabani, M., Davoodi, P., Maleki, S., & Bozorg-Haddad, O. (2023). **ContractWard: Scalable and Accurate Detection of Vulnerabilities in Smart Contracts Using Transformers**. *arXiv preprint arXiv:2302.01716*. [https://arxiv.org/abs/2302.01716](https://arxiv.org/abs/2302.01716)
+10. Soud, M., Qasse, I., Liebel, G., & Hamdaqa, M. (2022). **AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes**. *arXiv preprint arXiv:2212.10660*. [https://arxiv.org/abs/2212.10660](https://arxiv.org/abs/2212.10660)
+11. Mirzaei, M., Stocco, A., Cosentino, V., & Di Penta, M. (2023). **SolidiFI-BugLab: A Dataset and Learning Environment for Smart Contract Bug Localization and Repair**. *arXiv preprint arXiv:2304.06160*. [https://arxiv.org/abs/2304.06160](https://arxiv.org/abs/2304.06160)
