@@ -354,6 +354,26 @@ We will invite collaboration from:
 
 This dataset will catalyze research at the intersection of smart contract security and agentic AI. By offering a high-quality benchmark with diverse annotations, it can help establish agentic auditing as a scalable solution in security workflows, while enabling reproducibility, comparability, and openness across future research.
 
+
+## 10. Data Quality, Bias, and Ethical Considerations
+
+While OpenAuditBenchmark aims to unify and extend existing datasets for agentic AI applications in smart contract security, careful attention must be paid to **data quality**, **bias mitigation**, and **ethical implications**.  
+
+First, the use of synthetic vulnerabilities (as in SC-Bench and SolidiFI-A) must be balanced with real-world examples (as in AutoMESC and VulnContractSet) to avoid overfitting models to unrealistic bug patterns. Synthetic mutations may overrepresent certain SWC categories while underrepresenting subtle, low-frequency vulnerabilities.  
+
+Second, **label bias** can emerge when vulnerability annotations are derived solely from automated tools, especially when tool agreement is low. Incorporating multi-tool consensus (as in AutoMESC) and manual audit verification can reduce false positives and improve annotation reliability.  
+
+Third, dataset representativeness is crucial for fairness and generalization. Many public datasets focus heavily on ERC-20 and DeFi-related contracts, which may bias detection models toward specific coding styles and business logic. Expanding coverage to NFTs, DAOs, governance contracts, and Layer-2 rollup contracts will enhance domain diversity.  
+
+To quantify and maintain quality over time, **OpenAuditBenchmark** will adopt a set of dataset quality metrics, including:  
+
+- **Annotation Agreement Score (AAS)** – percentage of vulnerability labels agreed upon by ≥ N tools or verified by human auditors.  
+- **Domain Diversity Index (DDI)** – a normalized score representing the variety of contract categories (e.g., DeFi, NFT, DAO, L2 protocols) in the dataset.  
+- **Patch Validation Rate (PVR)** – percentage of generated patches passing all included test cases.  
+- **Severity Distribution Balance (SDB)** – variance in distribution of low-, medium-, and high-severity vulnerabilities to avoid skewed training signals.  
+
+Finally, ethical considerations must guide dataset release. Although source code of deployed contracts is public, combining code with detailed exploit traces and ready-to-use patches could inadvertently aid malicious actors. Therefore, OpenAuditBenchmark should implement **responsible disclosure protocols**, such as delayed release of exploit payloads or redacted sensitive details, ensuring its use primarily benefits the security community.  
+
 ## References
 
 1. Xia, S., He, M., Song, L., & Zhang, Y. (2024). **SC-Bench: A Large-Scale Dataset for Smart Contract Auditing**. *arXiv preprint arXiv:2410.06176*. [https://arxiv.org/abs/2410.06176](https://arxiv.org/abs/2410.06176)
@@ -375,3 +395,4 @@ Deng, Y., Li, J., Wang, X., & Liu, Z. (2023). **VulnContractSet: A Real-World Da
 9. Shabani, M., Davoodi, P., Maleki, S., & Bozorg-Haddad, O. (2023). **ContractWard: Scalable and Accurate Detection of Vulnerabilities in Smart Contracts Using Transformers**. *arXiv preprint arXiv:2302.01716*. [https://arxiv.org/abs/2302.01716](https://arxiv.org/abs/2302.01716)
 10. Soud, M., Qasse, I., Liebel, G., & Hamdaqa, M. (2022). **AutoMESC: Automatic Framework for Mining Ethereum Smart Contract Vulnerabilities and Fixes**. *arXiv preprint arXiv:2212.10660*. [https://arxiv.org/abs/2212.10660](https://arxiv.org/abs/2212.10660)
 11. Mirzaei, M., Stocco, A., Cosentino, V., & Di Penta, M. (2023). **SolidiFI-BugLab: A Dataset and Learning Environment for Smart Contract Bug Localization and Repair**. *arXiv preprint arXiv:2304.06160*. [https://arxiv.org/abs/2304.06160](https://arxiv.org/abs/2304.06160)
+12. Hindle, A., Barr, E. T., Gabel, M., Su, Z., & Devanbu, P. (2016). **On the Naturalness of Software**. *Communications of the ACM*, 59(5), 122–131. [https://doi.org/10.1145/2902362](https://doi.org/10.1145/2902362)  
