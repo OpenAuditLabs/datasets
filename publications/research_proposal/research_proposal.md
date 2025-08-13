@@ -4,7 +4,7 @@
 
 The evolving landscape of decentralized applications (dApps) has amplified the critical need for secure and verifiable smart contracts. While advances in static analyzers and large language models (LLMs) show promise, a core challenge remains: the absence of a comprehensive, standardized dataset that supports the full agentic AI lifecycle—vulnerability detection, severity scoring, patch generation, and patch validation. Existing datasets such as SC-Bench and AutoMESC provide valuable yet fragmented resources, often differing in format, scope, or focus (e.g., synthetic bugs vs. real-world exploits, detection-only vs. fix-pair annotations).
 
-This proposal introduces **OpenAuditBenchmark**, a unified and extensible dataset designed to consolidate and standardize heterogeneous data sources—including SC-Bench, AutoMESC, SWC Registry, and curated real-world exploit examples—into a cohesive schema. The benchmark will feature multi-modal annotations (code, vulnerability tags, severity scores, exploit traces, and fix patches), enabling zero-shot, few-shot, and reinforcement learning paradigms. Our goal is to foster reproducibility, rigorous evaluation, and collaboration across the smart contract security and AI research communities. By harmonizing disparate resources under a common benchmark, **OpenAuditBenchmark** will serve as the foundation for agentic AI systems capable of automated auditing and secure code remediation in the Web3 ecosystem.
+This proposal introduces **OpenAuditBenchmark**, a unified and extensible dataset designed to consolidate and standardize heterogeneous data sources—including SC-Bench, AutoMESC, SWC Registry, and curated real-world exploit examples—into a cohesive schema. The benchmark will feature multi-modal annotations (code, vulnerability tags, severity scores, exploit traces, and fix patches), enabling zero-shot, few-shot, and reinforcement learning paradigms. Our goal is to foster reproducibility, rigorous evaluation, and collaboration across the smart contract security and AI research communities. By harmonizing disparate resources under a common benchmark, **OpenAuditBenchmark** will serve as the foundation for agentic AI systems capable of automated auditing and secure code remediation in the Web3 ecosystem. We also define an agentic evaluation protocol, a reference control graph, governance safeguards, and reproducibility standards to make OpenAuditBenchmark agentic-by-design
 
 ---
 
@@ -24,6 +24,9 @@ The rapid expansion of decentralized applications (dApps) has elevated the role 
 - Execution traces or exploit payloads  
 
 Without such a benchmark, evaluating and training agentic systems becomes inconsistent, biased, or fragmented. This proposal aims to fill that gap by designing and curating a public dataset tailored for agentic AI research in the blockchain security domain.
+
+
+Beyond task metrics, we introduce agent-level KPIs and trace-based replay to evaluate plan–act–observe–adjust loops.
 
 ---
 
@@ -397,6 +400,117 @@ A practical workflow could involve:
 - Adding verified samples into **OpenAuditBenchmark** with clear provenance labels (`source_type: synthetic-LLM`).  
 
 Early experiments in related domains, such as **BugBench** for Java vulnerabilities (Ye et al., 2024) and **CodeVul** for C/C++ (Jiang et al., 2023), have shown that carefully validated LLM-generated vulnerabilities can significantly improve detection model robustness without introducing unrealistic patterns. This strategy, when combined with RL-based generation, could ensure **OpenAuditBenchmark** remains current, diverse, and representative of both known and emerging attack surfaces.  
+
+
+## 12. Agentic Evaluation Protocol
+
+To evaluate systems beyond single-task accuracy, we define agent-level metrics and a trace-driven harness that captures planning, tool use, reflection, and validation.
+
+### 12.1 Metrics
+
+- **End-to-End Solve Rate (E2E-SR)**: Percentage of samples for which the agent detects the vulnerability, assigns severity, proposes a patch, and passes validation in ≤K iterations.  
+- **Plan Success Rate (PSR)**: Fraction of agent runs where the planned subtask graph is completed without dead-ends or manual intervention.  
+- **Reflection Uplift (RU)**: Relative gain in E2E-SR when reflection is enabled versus disabled, holding model and tools constant.  
+- **Tool Routing Efficiency (TRE)**: Average tool calls per solved sample and ratio of “useful” calls (those that change plan state or lead to validation success).  
+- **Decision Latency (DL)**: Mean wall-clock time per solved sample; reported per phase (detect, score, patch, validate).  
+- **Cost per Solve (CPS)**: Sum of API/tool compute costs per successfully solved sample; reported with 95% CIs.  
+- **Failure Recovery Rate (FRR)**: Probability that a failed validation is resolved within N reflection iterations.  
+- **Safety Violation Rate (SVR)**: Frequency of unsafe or policy-violating outputs during patching or explanation.  
+
+### 12.2 Harness and Traces
+
+- **Step Traces**: For each sample, record ordered steps: `{planner_decision, tool_call{schema,input_hash,version}, observation_digest, memory_read/write keys, cost, latency, result_status}`.  
+- **Determinism and Seeds**: Fix LLM temperature, enable reproducible seeds for sampling tools, and pin tool versions per run.  
+- **Budgets and Limits**: Set per-sample timeouts, max tool calls, and max reflection depth; report stoppage reasons (timeout, budget exceeded, stagnation).  
+- **Replayability**: Release trace JSONL files and a replay script that re-executes tool calls with version pins and diffs outputs.  
+
+### 12.3 Reporting
+
+- Always report E2E-SR, RU, TRE, CPS, DL, and FRR alongside task metrics (F1/MSE/Patch Accuracy/Pass Rate).  
+- Stratify by domain (DeFi, NFT, DAO, L2) and by severity tiers to expose differential performance.  
+- Provide ablations for: no-reflection, capped planner depth, single-tool vs ensemble, and memory disabled.  
+
+---
+
+## 13. Reference Agent Control Graph
+
+We provide a baseline control graph suitable for reproducible evaluation and as a template for future agent research.
+
+### 13.1 Nodes
+
+- **Planner**: Decomposes goal into subgoals: detect → score → patch → validate; sets budgets and stop criteria.  
+- **Retrieval/Memory**: Fetches exemplars, prior patches, and failure cases; writes final artifacts and failure traces.  
+- **Detector Ensemble**: Static analyzers + LLM detector; aggregates findings with confidence.  
+- **Severity Scorer**: CVSS-style scoring model or rule-based heuristic augmented by LLM rationale.  
+- **Patcher**: Patch proposal from LLM or template-based APR; enforces tool schemas and coding constraints.  
+- **Validator**: Runs test/exploit traces (Echidna/Foundry/Manticore); summarizes failures.  
+- **Reflector**: Diagnoses failure class (spec ambiguity, wrong location, insufficient guard), revises prompts/tools/plan.  
+
+### 13.2 Edges and Policies
+
+- **Conditional Routing**: If detection confidence < τ, request memory exemplars; if validation fails, send to Reflector until `max_iter = M`; if CPS exceeds budget, stop with partial outputs.  
+- **Parallelism**: Allow parallel static analyzers and parallel test fuzzers where thread-safe.  
+- **Termination**: Succeed on validation pass; fail on budget/time limit or stagnation (no plan delta in two iterations).  
+
+### 13.3 Configuration (Baseline)
+
+- Max reflection iterations `M = 2`.  
+- Max tool calls per sample = 25.  
+- LLM temperature = 0.2; top_p = 0.9.  
+- Analyzer versions and flags pinned; Foundry/Echidna seeds fixed.  
+- Memory read: top-5 similar cases by SWC and structure; write: success/failure summary and diffs.  
+
+---
+
+## 14. Governance, Safety, and Red Teaming
+
+We introduce governance to mitigate misuse risks and improve reliability.
+
+### 14.1 Policy Controls
+
+- **Permissioning**: No autonomous deployment; high-severity (CVSS ≥ 7.0) patches require human approval.  
+- **Payload Redaction**: Exploit payloads are stored hashed by default; raw payloads gated via role-based access.  
+- **Output Guardrails**: Patches must preserve license headers, avoid unsafe constructs (`tx.origin` auth, raw `delegatecall`), and maintain compiler pragmas.  
+
+### 14.2 Safety Evaluations
+
+- **Jailbreak Tests**: Prompt the patcher with adversarial instructions; report SVR under stress.  
+- **Exploit Enablement Risk**: Measure occurrences where suggested changes increase attack surface (e.g., removing checks).  
+- **Sensitive Data Handling**: Verify no leakage of private keys/secrets in traces or logs.  
+
+### 14.3 Auditability
+
+- **Immutable Logs**: Append-only logs of steps, tools, costs, and decisions.  
+- **Human-in-the-Loop Hooks**: Manual checkpoints for risky actions and policy overrides with justification trails.  
+
+---
+
+## 15. Agentic Benchmark Rigor Checklist
+
+To standardize reporting and reduce leakage or spurious success, we define a checklist authors must complete when submitting results to **OpenAuditBenchmark**.
+
+### 15.1 Outcome Validity
+
+- Ground truth provenance documented (tool votes, human verification).  
+- Patch validation executed with pinned tool versions and seeds.  
+- Negative controls included (samples designed to detect shortcutting or oracle leakage).  
+
+### 15.2 Task Validity
+
+- Realistic tool access constraints (no oracle labels beyond what a tool could reasonably produce).  
+- Domain diversity reported (DDI) and class balance discussed.  
+- Temporal splits or freshness handling described for time-varying data.  
+
+### 15.3 Reporting Rigor
+
+- Release of traces (inputs hashed where needed), seeds, config files, and version pins.  
+- Full metric suite: task-level + agent-level.  
+- Ablations: reflection off, planner depth limits, memory on/off, ensemble vs single detector.  
+
+### 15.4 Stress Tests
+
+- Drift evaluation on newly added contracts monthly/quarterly.  
+- Adversarial prompts and tool failures simulated; report degradation and recoveries.  
 
 
 
