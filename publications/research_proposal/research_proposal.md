@@ -514,6 +514,115 @@ To standardize reporting and reduce leakage or spurious success, we define a che
 
 
 
+# 16. Reproducibility and Telemetry
+
+We define schemas for tools and traces to enable exact replays.
+
+## 16.1 Tool Schemas
+- **Typed I/O** for each tool:  
+  - `name`, `version`  
+  - `inputs` {fields, types}  
+  - `outputs` {fields, types}  
+  - `constraints` {timeout, max_cost}  
+  - `error schema`  
+- **Budget Contracts:** Per-sample budget envelope tracked; tools must return cost estimates and latencies.
+
+ ### 16.2 Trace Format (JSONL)
+ Each line is a step:
+ ```json
+ {
+   "contract_id": "OAB-XXXX",
+   "step_id": 7,
+  "trace_version": "1",
+   "node": "validator",
+   "tool": {"name": "foundry", "version": "vX.Y.Z"},
+  "inputs_sha256": "HASH",
+   "outputs_digest": {"status": "fail", "tests_passed": 12, "tests_total": 18},
+   "latency_ms": 14230,
+   "cost_usd": 0.21,
+   "policy_flags": ["budget_ok", "no_sensitive_leak"],
+
+  "memory_reads": ["case:SWC-107:..."],
+  "memory_writes": ["trace:fail:..."],
+  "seed": 12345
+ }
+
+```
+
+
+### 16.3 Release Artifacts  
+- Dockerfiles and lockfiles for analyzers and fuzzers  
+- Config presets for baseline agent  
+- A **replay CLI** that:
+  1. Consumes trace JSONL  
+  2. Replays each step against tool schemas  
+  3. Verifies integrity via SHA-256 and exit codes  
+
+---
+
+## 17. Drift, Domain Coverage, and Freshness
+
+### 17.1 Coverage Targets  
+- **Domain Diversity Index (DDI) ≥ 0.7** across DeFi / NFT / DAO / L2 / bridges  
+- **Severity Distribution** balanced within ±15% of target priors across low/medium/high
+
+### 17.2 Refresh Cadence  
+- **Quarterly dataset refresh**: ingest new exploits & patches  
+- **Deprecate/quarantine** stale or disputed labels  
+- **Versioned releases** (OAB-v1.x):
+  - Changelogs  
+  - Migration notes  
+  - Stability guarantees per minor version
+
+### 17.3 Monitoring  
+- Track **model performance drift** per release  
+- Re-benchmark on “fresh” subset  
+- Maintain an **out-of-time split** for generalization checks
+
+---
+
+## 18. Baseline Agents and Ablations
+
+### 18.1 Baseline A: ReAct Single-Agent  
+- **Loop**: detect → score → patch → validate  
+- **Tools**: Slither + Mythril ensemble; LLM patcher; Foundry / Echidna validator  
+- **Metrics**:  
+  - E2E-SR (End-to-End Solve Rate)  
+  - TTR (Time to Resolution)  
+  - DL (Decision Latency)  
+  - CPS (Cost per Solve)  
+- **Ablation**: disable reflection step
+
+### 18.2 Baseline B: Planner–Executor–Critic Multi-Agent  
+- **Planner**: task decomposition  
+- **Executor**: runs tools  
+- **Critic**: reflects, suggests re-plan or tool switch  
+- **Memory**: shared vector store of past successes/failures by SWC  
+- **Metrics**: RU (Reflection Uplift) vs Baseline A; ResU (Resource Utilization) 
+- **Ablations**: planner depth off; memory off
+
+### 18.3 Routing Ablations  
+- **Detector modes**: static-only vs dynamic-only vs hybrid  
+- **Tool budget caps**: cost and latency impact on E2E-SR  
+- **Reflection depth** (M ∈ {0,1,2,3})
+
+---
+
+## 19. Ethical Release and Access Tiers
+
+| Tier         | Includes                                                       | Access Control                    |
+| ------------ | -------------------------------------------------------------- | --------------------------------- |
+| **Public**   | Source, labels, severity, diff stubs, hashed traces, summaries | Open                              |
+| **Research** | Full traces, executable payloads (delayed)                     | Approved researchers via DUA      |
+| **Red Team** | Adversarial prompts, exploit payloads                          | Accredited evaluators (strict DUA)|
+
+- **Review Process**: affiliation & intended use  
+- **Watermarking & Logging**: sensitive artifacts
+
+---
+
+
+
 ## References
 
 1. Xia, S., He, M., Song, L., & Zhang, Y. (2024). **SC-Bench: A Large-Scale Dataset for Smart Contract Auditing**. *arXiv preprint arXiv:2410.06176*. [https://arxiv.org/abs/2410.06176](https://arxiv.org/abs/2410.06176)
