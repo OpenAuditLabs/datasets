@@ -527,23 +527,27 @@ We define schemas for tools and traces to enable exact replays.
   - `error schema`  
 - **Budget Contracts:** Per-sample budget envelope tracked; tools must return cost estimates and latencies.
 
-## 16.2 Trace Format (JSONL)
-Each line is a step:
-```json
-{
-  "contract_id": "OAB-XXXX",
-  "step_id": 7,
-  "node": "validator",
-  "tool": {"name": "foundry", "version": "vX.Y.Z"},
-  "inputs_sha256": "…",
-  "outputs_digest": {"status": "fail", "tests_passed": 12, "tests_total": 18},
-  "latency_ms": 14230,
-  "cost_usd": 0.21,
-  "policy_flags": ["budget_ok", "no_sensitive_leak"],
-  "memory_reads": ["case:SWC-107:…"],
-  "memory_writes": ["trace:fail:…"]
-}
+ ### 16.2 Trace Format (JSONL)
+ Each line is a step:
+ ```json
+ {
+   "contract_id": "OAB-XXXX",
+   "step_id": 7,
+  "trace_version": "1",
+   "node": "validator",
+   "tool": {"name": "foundry", "version": "vX.Y.Z"},
+  "inputs_sha256": "HASH",
+   "outputs_digest": {"status": "fail", "tests_passed": 12, "tests_total": 18},
+   "latency_ms": 14230,
+   "cost_usd": 0.21,
+   "policy_flags": ["budget_ok", "no_sensitive_leak"],
 
+  "memory_reads": ["case:SWC-107:..."],
+  "memory_writes": ["trace:fail:..."],
+  "seed": 12345
+ }
+
+```
 
 
 ### 16.3 Release Artifacts  
@@ -583,10 +587,10 @@ Each line is a step:
 - **Loop**: detect → score → patch → validate  
 - **Tools**: Slither + Mythril ensemble; LLM patcher; Foundry / Echidna validator  
 - **Metrics**:  
-  - E2E-SR (End-to-End Success Rate)  
-  - TRE (Time to Resolution)  
-  - DL (Detection Latency)  
-  - CPS (Cost per Sample)  
+  - E2E-SR (End-to-End Solve Rate)  
+  - TTR (Time to Resolution)  
+  - DL (Decision Latency)  
+  - CPS (Cost per Solve)  
 - **Ablation**: disable reflection step
 
 ### 18.2 Baseline B: Planner–Executor–Critic Multi-Agent  
@@ -594,7 +598,7 @@ Each line is a step:
 - **Executor**: runs tools  
 - **Critic**: reflects, suggests re-plan or tool switch  
 - **Memory**: shared vector store of past successes/failures by SWC  
-- **Metrics**: RU (Resource Utilization) vs Baseline A  
+- **Metrics**: RU (Reflection Uplift) vs Baseline A; ResU (Resource Utilization) 
 - **Ablations**: planner depth off; memory off
 
 ### 18.3 Routing Ablations  
