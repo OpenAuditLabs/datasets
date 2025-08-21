@@ -1,0 +1,111 @@
+openauditbenchmark/
+├── data_pipeline/
+│   ├── collation/
+│   │   ├── connectors/
+│   │   │   ├── sc_bench_connector.py
+│   │   │   ├── automesc_connector.py
+│   │   │   ├── vulncontractset_connector.py
+│   │   │   ├── solidifi_connector.py
+│   │   │   ├── smartbugs_connector.py
+│   │   │   ├── custom_exploit_connector.py
+│   │   │   └── audit_engine_connector.py         
+│   │   ├── normalizers/
+│   │   │   ├── json_normalizer.py
+│   │   │   ├── csv_normalizer.py
+│   │   │   └── ast_normalizer.py
+│   │   └── collation_manager.py
+│   ├── feature_extraction/
+│   │   ├── static_features.py
+│   │   ├── dynamic_features.py
+│   │   ├── taxonomy_features.py
+│   │   ├── severity_features.py
+│   │   ├── agentic_features.py                    
+│   │   └── feature_pipeline.py
+│   └── storage/
+│       ├── dataset_store.py
+│       ├── metadata_index.py
+│       └── audit_engine_index.py                  
+
+├── integration/
+│   ├── __init__.py
+│   ├── audit_engine_adapter.py                    
+│   ├── schema_sync.py                             
+│   └── config_bridge.py                           
+
+├── benchmark/
+│   ├── detection/
+│   │   ├── run_detection.py
+│   │   └── evaluate_detection.py
+│   ├── severity/
+│   │   ├── run_severity.py
+│   │   └── evaluate_severity.py
+│   ├── patch_generation/
+│   │   ├── run_patch_generation.py
+│   │   └── evaluate_patch.py
+│   ├── patch_validation/
+│   │   ├── run_validation.py
+│   │   └── evaluate_validation.py
+│   └── metrics/
+│       └── aggregate_metrics.py
+
+├── schemas/
+│   └── unified_contract_schema.json
+
+└── tests/
+    ├── data_pipeline_tests/
+    ├── feature_extraction_tests/
+    ├── benchmark_tests/
+    └── integration_tests/
+        ├── test_audit_engine_adapter.py
+        ├── test_schema_sync.py
+        └── test_config_bridge.py
+
+audit_engine/
+├── core/
+│   ├── __init__.py
+│   ├── engine.py
+│   ├── schemas.py
+│   ├── config.py
+│   └── agentic_controller.py                     
+├── data/
+│   └── swc_registry.json
+├── static_analysis/
+│   ├── __init__.py
+│   ├── slither_adapter.py
+│   ├── mythril_adapter.py
+│   └── manticore_adapter.py
+├── dynamic_analysis/
+│   ├── __init__.py
+│   ├── echidna_adapter.py
+│   └── adversarial_fuzz.py
+├── scoring/
+│   ├── __init__.py
+│   ├── scoring_engine.py
+│   └── severity_mapping.py
+├── utils/
+│   ├── __init__.py
+│   ├── file_handler.py
+│   ├── swc_loader.py
+│   ├── report_generator.py
+│   └── logger.py
+└── tests/
+    ├── static_analysis/
+    │   ├── test_slither_adapter.py
+    │   ├── test_mythril_adapter.py
+    │   └── test_manticore_adapter.py
+    ├── dynamic_analysis/
+    │   ├── test_echidna_adapter.py
+    │   └── test_adversarial_fuzz.py
+    ├── scoring/
+    │   ├── test_scoring_engine.py
+    │   └── test_severity_mapping.py
+    ├── utils/
+    │   ├── test_file_handler.py
+    │   ├── test_swc_loader.py
+    │   └── test_report_generator.py
+    ├── core/
+    │   ├── test_schemas.py
+    │   └── test_engine_integration.py
+    └── integration_tests/
+        ├── test_agentic_controller.py             
+        └── test_audit_engine_integration.py       
