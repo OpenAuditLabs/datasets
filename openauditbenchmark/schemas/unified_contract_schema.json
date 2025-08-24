@@ -1,0 +1,41 @@
+{
+  "contract_id": "string",
+  "source": {
+    "source_code": "string",
+    "source_type": "string",
+    "origin": "string"
+  },
+  "vulnerability": {
+    "swc_id": "string",
+    "description": "string",
+    "tool_labels": {
+      "slither": "boolean",
+      "mythril": "boolean",
+      "smartcheck": "boolean"
+    },
+    "severity_score": {
+      "cvss_v3": "number",
+      "confidence": "number"
+    },
+    "location": {
+      "lines": ["number"],
+      "ast_nodes": ["string"]
+    }
+  },
+  "exploit_trace": {
+    "available": "boolean",
+    "trace_steps": ["string"],
+    "tool": "string"
+  },
+  "patch": {
+    "available": "boolean",
+    "type": "string",
+    "diff": "string",
+    "validation_status": "string",
+    "test_coverage": "number"
+  },
+  "taxonomy_links": {
+    "cve": "string",
+    "erc_standard": "string"
+  }
+}
