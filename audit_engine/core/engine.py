@@ -15,19 +15,43 @@ class AuditEngine:
         The config should include tool settings, severity thresholds, and
         other pipeline parameters.
         """
-        with open(config_path, 'r') as f:
-            self.config: Dict[str, Any] = json.load(f)
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                self.config: Dict[str, Any] = json.load(f)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Config file not found: {config_path}") from e
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON in config file {config_path}: {e}") from e
+        if not isinstance(self.config, dict):
+            raise TypeError("Config root must be a JSON object (dict).")
 
-        # Initialize static analysis tools
-        self.slither = SlitherAdapter(self.config.get('slither', {}))
-        self.mythril = MythrilAdapter(self.config.get('mythril', {}))
 
-        # Initialize dynamic analysis tools
-        self.echidna = EchidnaAdapter(self.config.get('echidna', {}))
-        self.fuzzer = AdversarialFuzzer(self.config.get('fuzzer', {}))
+        # Initialize static analysis tools (fallback if no-arg constructor)
+        cfg = self.config
+        try:
+            self.slither = SlitherAdapter(cfg.get('slither', {}))
+        except TypeError:
+            self.slither = SlitherAdapter()
+        try:
+            self.mythril = MythrilAdapter(cfg.get('mythril', {}))
+        except TypeError:
+            self.mythril = MythrilAdapter()
 
-        # Initialize scoring engine
-        self.scorer = ScoringEngine(self.config.get('scoring', {}))
+        # Initialize dynamic analysis tools (fallback if no-arg constructor)
+        try:
+            self.echidna = EchidnaAdapter(cfg.get('echidna', {}))
+        except TypeError:
+            self.echidna = EchidnaAdapter()
+        try:
+            self.fuzzer = AdversarialFuzzer(cfg.get('fuzzer', {}))
+        except TypeError:
+            self.fuzzer = AdversarialFuzzer()
+
+        # Initialize scoring engine (fallback if no-arg constructor)
+        try:
+            self.scorer = ScoringEngine(cfg.get('scoring', {}))
+        except TypeError:
+            self.scorer = ScoringEngine()
 
     def run(self, contract_path: str) -> Dict[str, Any]:
         """
@@ -37,11 +61,29 @@ class AuditEngine:
           - dynamic_results: Echidna & fuzzing outputs
           - severity_scores: CVSS-style scores per vulnerability
         """
-        results: Dict[str, Any] = {}
+        results: Dict[str, Any] = {"errors": {}}
+
+        # Validate target
+        path = Path(contract_path)
+        if not path.is_file():
+            raise FileNotFoundError(f"Contract file not found: {contract_path}")
 
         # 1. Static analysis
-        slither_issues = self.slither.analyze(contract_path)
-        mythril_issues = self.mythril.analyze(contract_path)
+        try:
+            slither_issues = self.slither.analyze(contract_path)
+        except Exception as e:
+            results["errors"]["slither"] = str(e)
+            slither_issues = []
+        try:
+            mythril_issues = self.mythril.analyze(contract_path)
+        except Exception as e:
+            results["errors"]["mythril"] = str(e)
+            mythril_issues = []
+        results['static_results'] = {
+            'slither': slither_issues,
+            'mythril': mythril_issues
+        }
+
         results['static_results'] = {
             'slither': slither_issues,
             'mythril': mythril_issues
@@ -56,8 +98,25 @@ class AuditEngine:
         }
 
         # 3. Severity scoring
-        all_issues = slither_issues + mythril_issues
-        severity = self.scorer.score(all_issues)
+        def _coerce_findings(f):
+            if not f:
+                return []
+            if isinstance(f, list):
+                return f
+            if isinstance(f, dict):
+                return [f]
+            try:
+                return list(f)
+            except TypeError:
+                return [f]
+
+        all_issues = _coerce_findings(slither_issues) + _coerce_findings(mythril_issues)
+        try:
+            severity = self.scorer.score(all_issues)
+        except Exception as e:
+            results.setdefault('errors', {})['scoring'] = str(e)
+            severity = []
         results['severity_scores'] = severity
+
 
         return results
