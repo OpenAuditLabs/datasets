@@ -91,8 +91,10 @@ Key contributions:
 
 While limited in scale, SmartBugs is highly suitable for evaluating static analyzers and serves as a gold-standard benchmark for detector comparison.
 
+---
 
-
+**Interoperability and Future Directions:**  
+As the landscape of smart contract vulnerability datasets continues to evolve, interoperability between benchmarks and tools becomes increasingly important. The ability to cross-reference findings, severity scores, and patch suggestions across datasets like SC-Bench, AutoMESC, and SmartBugs enables more robust evaluation of agentic AI systems. Future benchmarks should prioritize modular schema designs, standardized taxonomies, and support for emerging contract types (e.g., Layer-2, cross-chain bridges). This will facilitate collaborative research, reproducibility, and the development of next-generation automated auditing agents.
 
 ---
 
@@ -647,4 +649,4 @@ Deng, Y., Li, J., Wang, X., & Liu, Z. (2023). **VulnContractSet: A Real-World Da
 12. Hindle, A., Barr, E. T., Gabel, M., Su, Z., & Devanbu, P. (2016). **On the Naturalness of Software**. *Communications of the ACM*, 59(5), 122–131. [https://doi.org/10.1145/2902362](https://doi.org/10.1145/2902362)  
 13. Ye, S., Wang, Y., Liu, J., & Guo, Y. (2024). **BugBench: A Benchmark for Evaluating Large Language Models on Software Vulnerability Detection and Repair**. *arXiv preprint arXiv:2403.01867*. [https://arxiv.org/abs/2403.01867](https://arxiv.org/abs/2403.01867)  
 14. Jiang, W., Zhang, X., Li, Z., & Wang, P. (2023). **CodeVul: A Benchmark for Vulnerability Detection and Repair in C/C++ Code with Large Language Models**. *arXiv preprint arXiv:2306.04724*. [https://arxiv.org/abs/2306.04724](https://arxiv.org/abs/2306.04724)  
-15. Pearce, H., Ahmad, M., & Parker, A. (2022). **Generating Security-Relevant Code Examples with GPT-3**. *Proceedings of the 31st USENIX Security Symposium*. [https://www.usenix.org/conference/usenixsecurity22](https://www.usenix.org/conference/usenixsecurity22)  
+15. Pearce, H., Ahmad, M., & Parker, A. (2022). **Generating Security-Relevant Code Examples with GPT-3**. *Proceedings of the 31st USENIX Security Symposium*. [https://www.usenix.org/conference/usenixsecurity22](https://www.usenix.org/conference/usenixsecurity22)
